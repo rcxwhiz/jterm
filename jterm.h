@@ -27,19 +27,27 @@ namespace jterm
 class Term
 {
 public:
-	static Term* getInstance()
+	static auto getInstance() -> Term*&
 	{
+		static Term* instance = nullptr;
 		if (!instance)
 		{
 			instance = new Term();
 		}
 		return instance;
 	}
+//	{
+//		if (!instance)
+//		{
+//			instance = new Term();
+//		}
+//		return instance;
+//	}
 	static void exit()
 	{
 		endwin();
-		delete instance;
-		instance = nullptr;
+		delete getInstance();
+		getInstance() = nullptr;
 	}
 
 	void addLine()
@@ -109,7 +117,7 @@ private:
 		noecho();
 		clear();
 	}
-	static Term* instance;
+//	static Term* instance;
 	static const int numClearLines = 100;
 
 	void addSingleLine(const std::string& msg)
