@@ -16,6 +16,7 @@
 #define JTERM_H
 
 #include <iostream>
+#include <mutex>
 #include <string>
 #include <vector>
 
@@ -27,27 +28,15 @@ namespace jterm
 class Term
 {
 public:
-	static auto getInstance() -> Term*&
+	static Term& getInstance()
 	{
-		static Term* instance = nullptr;
-		if (!instance)
-		{
-			instance = new Term();
-		}
-		return instance;
+		static std::once_flag flag;
+		std::call_once(flag, [] {instance();});
+		return instance();
 	}
-//	{
-//		if (!instance)
-//		{
-//			instance = new Term();
-//		}
-//		return instance;
-//	}
 	static void exit()
 	{
 		endwin();
-		delete getInstance();
-		getInstance() = nullptr;
 	}
 
 	void addLine()
@@ -117,7 +106,12 @@ private:
 		noecho();
 		clear();
 	}
-//	static Term* instance;
+	static Term& instance()
+	{
+		static Term instance;
+		return instance;
+	}
+
 	static const int numClearLines = 100;
 
 	void addSingleLine(const std::string& msg)
