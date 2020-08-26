@@ -1,7 +1,7 @@
 /*
  * jterm library
  * by Josh Bedwell
- * version 0.0
+ * version 1.0
  *
  * This library is my wrapper for ncurses.
  *
